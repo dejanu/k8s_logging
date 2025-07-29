@@ -1,0 +1,36 @@
+# Logging chain
+
+```
+LOG COLLECTOR --> FluentBit (ds)
+LOG AGGREATOR/PROCESSOR --> Fluentd (deployment/sts)
+LOG STORAGE/SEARCH --> OpenSearch (sts)
+```
+
+## Motivation
+
+Treasure Data: FluentBit is to FluentD what Beats are to Logstash...Charts [here](https://github.com/fluent/helm-charts)
+
+* FluentBit: lightweight forwarder (450KB) translating into `memory: 128Mi` and `cpu: 100m` with a variety of input plugins. Uses [tail input plugin](https://docs.fluentbit.io/manual/data-pipeline/inputs/tail) to tail `/var/log/containers/*.log` and forwards to fluentd using [forward output plugin](https://docs.fluentbit.io/manual/data-pipeline/outputs/forward)...stream data to fluentd.
+
+* Fluentd: aggregator (40MB) translating into into `memory: 128Mi` and `cpu: 10m`. Does buffering (in-memory or file based), retries, routing, filtering.
+
+* OpenSearch: storage and search engine
+
+## Quick install
+
+```bash
+helm upgrade -i fluentbit charts/fluent-bit
+helm upgrade -i fluentd charts/fluentd -f fluentd-values.yaml
+helm upgrade -i opensearch charts/opensearch
+
+# check opensearch cluster
+kubectl port-forward svc/opensearch-cluster-master 9200:9200
+```
+
+## Troubleshooting
+
+If Fluentd logs show authentication errors with OpenSearch:
+
+1. Ensure the `fluentd-values.yaml` file contains the correct `user` and `password` for OpenSearch.
+2. Verify that the OpenSearch user has sufficient privileges to write logs.
+3. If using SSL, ensure the `ssl_verify` option is correctly configured.

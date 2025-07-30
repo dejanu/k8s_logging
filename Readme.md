@@ -50,7 +50,32 @@ helm upgrade -i opensearch charts/opensearch
 # check opensearch cluster
 kubectl port-forward svc/opensearch-cluster-master 9200:9200
 ```
-
 ## Notes
 
 * A word about [buffering](https://github.com/dejanu/k8s_logging/blob/main/buffering.md) 
+
+## Troubleshooting
+
+* Fluentd is not able to connect to OpenSearch:
+```bash
+#0 Could not communicate to OpenSearch, resetting connection and trying again. [401] Unauthorized
+...
+```
+Solution start session in opensearch-master pod `kubectl exec -it opensearch-cluster-master-0 -- sh` and execute security admin (plugin includes demo certificates so that you can get up and running quickly)
+```bash
+/usr/share/opensearch/plugins/opensearch-security/tools/securityadmin.sh -cd "/usr/share/opensearch/config/opensearch-security" -icl -key "/usr/share/opensearch/config/kirk-key.pem"   -cert "/usr/share/opensearch/config/kirk.pem" -cacert "/usr/share/opensearch/config/root-ca.pem" -nhnv
+```
+
+
+## Test 
+
+ ```bash
+ # port forward
+kubectl port-forward svc/opensearch-cluster-master 9200:9200
+
+# check cluster health
+curl -k -u `admin:INSERTPASSORDHERE` "https://localhost:9200/_cluster/health?pretty"
+
+# check indices (you should see kubernetes-logs-YYYY-MM-DD)
+curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/_cat/indices?v&pretty"
+```

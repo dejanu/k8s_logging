@@ -401,7 +401,7 @@ fileConfigs:
         scheme https
         ssl_verify false
         user admin
-        password INSERTPASSWORD
+        password INSERTPASSORDHERE
         index_name fluentd-logs
         type_name _doc
         logstash_format true

@@ -48,10 +48,6 @@ helm upgrade -i opensearch charts/opensearch
 kubectl port-forward svc/opensearch-cluster-master 9200:9200
 ```
 
-## Troubleshooting
+## Notes
 
-If Fluentd logs show authentication errors with OpenSearch:
-
-1. Ensure the `fluentd-values.yaml` file contains the correct `user` and `password` for OpenSearch.
-2. Verify that the OpenSearch user has sufficient privileges to write logs.
-3. If using SSL, ensure the `ssl_verify` option is correctly configured.
+* A word about [buffering](https://github.com/dejanu/k8s_logging/blob/main/buffering.md) 

@@ -10,7 +10,10 @@ LOG STORAGE/SEARCH --> OpenSearch (sts)
 
 Treasure Data: FluentBit is to FluentD what Beats are to Logstash...Charts [here](https://github.com/fluent/helm-charts)
 
-* FluentBit: lightweight forwarder (450KB) translating into `memory: 128Mi` and `cpu: 100m` with a variety of input plugins. Uses [tail input plugin](https://docs.fluentbit.io/manual/data-pipeline/inputs/tail) to tail `/var/log/containers/*.log` and forwards to fluentd using [forward output plugin](https://docs.fluentbit.io/manual/data-pipeline/outputs/forward)...stream data to fluentd.
+Both Fluentd and Fluent Bit can work as Aggregators or Forwarders, and can complement each other or be used as standalone solutions.
+More [here](https://docs.fluentbit.io/manual/about/fluentd-and-fluent-bit)
+
+* FluentBit: lightweight forwarder (450KB - 1 MB) translating into `memory: 128Mi` and `cpu: 100m` with a variety of input plugins. Uses [tail input plugin](https://docs.fluentbit.io/manual/data-pipeline/inputs/tail) to tail `/var/log/containers/*.log` and forwards to fluentd using [forward output plugin](https://docs.fluentbit.io/manual/data-pipeline/outputs/forward)...stream data to fluentd.
 Fluentbit it uses parsers to make sense of raw log files,filters to enrich logs and outputs
 
 ```yaml
@@ -33,7 +36,7 @@ Fluentbit it uses parsers to make sense of raw log files,filters to enrich logs 
   Index   myapp-logs
 ```
 
-* Fluentd: aggregator (40MB) translating into into `memory: 128Mi` and `cpu: 10m`. Does buffering (in-memory or file based), retries, routing, filtering.
+* Fluentd: aggregator (40 MB - 60 MB ) translating into into `memory: 128Mi` and `cpu: 10m`. Does buffering (in-memory or file based), retries, routing, filtering.
 
 * OpenSearch: storage and search engine
 

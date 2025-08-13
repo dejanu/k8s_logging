@@ -29,7 +29,7 @@ curl -k -u `admin:INSERTPASSORDHERE` "https://localhost:9200/_cluster/health?pre
 curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/_cat/indices?v&pretty"
 
 # deploy a workload (i.e. a counter pod)
-kubectl apply -f https://k8s.io/examples/debug/counter-pod.yaml
+kubectl apply -f https://raw.githubusercontent.com/dejanu/k8s_logging/refs/heads/main/counter_pod.yaml
 
 # after a couple of minutes check in opensearch your index, i.e.: kubernetes-logs-2025.08.13
 curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/kubernetes-logs-2025.08.13/_search?size=3&sort=@timestamp:desc&pretty"

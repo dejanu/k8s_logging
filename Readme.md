@@ -43,16 +43,23 @@ Fluentbit it uses parsers to make sense of raw log files,filters to enrich logs 
 
 * OpenSearch: storage and search engine
 
-## Quick install
+## Setup Quick install
 
 ```bash
 helm upgrade -i fluentbit charts/fluent-bit
 helm upgrade -i fluentd charts/fluentd
 helm upgrade -i opensearch charts/opensearch
 
-# check opensearch cluster
+# port forward to opensearch cluster
 kubectl port-forward svc/opensearch-cluster-master 9200:9200
+
+# check cluster health
+curl -k -u `admin:INSERTPASSORDHERE` "https://localhost:9200/_cluster/health?pretty"
+
+# check indices (you should see kubernetes-logs-YYYY-MM-DD)
+curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/_cat/indices?v&pretty"
 ```
+
 ## Notes
 
 * A word about [buffering](https://github.com/dejanu/k8s_logging/blob/main/buffering.md) 
@@ -67,20 +74,6 @@ kubectl port-forward svc/opensearch-cluster-master 9200:9200
 Solution start session in opensearch-master pod `kubectl exec -it opensearch-cluster-master-0 -- sh` and execute security admin (plugin includes demo certificates so that you can get up and running quickly)
 ```bash
 /usr/share/opensearch/plugins/opensearch-security/tools/securityadmin.sh -cd "/usr/share/opensearch/config/opensearch-security" -icl -key "/usr/share/opensearch/config/kirk-key.pem"   -cert "/usr/share/opensearch/config/kirk.pem" -cacert "/usr/share/opensearch/config/root-ca.pem" -nhnv
-```
-
-
-## Test 
-
- ```bash
- # port forward
-kubectl port-forward svc/opensearch-cluster-master 9200:9200
-
-# check cluster health
-curl -k -u `admin:INSERTPASSORDHERE` "https://localhost:9200/_cluster/health?pretty"
-
-# check indices (you should see kubernetes-logs-YYYY-MM-DD)
-curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/_cat/indices?v&pretty"
 ```
 
 

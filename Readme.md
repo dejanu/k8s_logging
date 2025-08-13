@@ -50,6 +50,9 @@ helm upgrade -i fluentbit charts/fluent-bit
 helm upgrade -i fluentd charts/fluentd
 helm upgrade -i opensearch charts/opensearch
 
+# check fluentd config at runtime: 01_sources.conf or 04_outputs.conf
+kubectl exec -c fluentd $(kubectl get po -l app.kubernetes.io/instance=fluentd -oname) -- ls /etc/fluent/config.d/
+
 # port forward to opensearch cluster
 kubectl port-forward svc/opensearch-cluster-master 9200:9200
 
@@ -58,6 +61,7 @@ curl -k -u `admin:INSERTPASSORDHERE` "https://localhost:9200/_cluster/health?pre
 
 # check indices (you should see kubernetes-logs-YYYY-MM-DD)
 curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/_cat/indices?v&pretty"
+
 ```
 
 ## Notes

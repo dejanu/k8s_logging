@@ -6,6 +6,9 @@ LOG AGGREATOR/PROCESSOR --> Fluentd (deployment/sts)
 LOG STORAGE/SEARCH --> OpenSearch (sts)
 ```
 
+[logging chain](./diagrams/logging_chain.png)
+
+
 ## Motivation
 
 Treasure Data: FluentBit is to FluentD what Beats are to Logstash...Charts [here](https://github.com/fluent/helm-charts)
@@ -79,3 +82,8 @@ curl -k -u `admin:INSERTPASSORDHERE` "https://localhost:9200/_cluster/health?pre
 # check indices (you should see kubernetes-logs-YYYY-MM-DD)
 curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/_cat/indices?v&pretty"
 ```
+
+
+### OpenSearch sizing
+
+* OpenSearch calculator [here](https://dejanu.github.io/oscalculator.html)

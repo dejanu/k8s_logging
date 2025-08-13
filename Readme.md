@@ -33,6 +33,14 @@ kubectl apply -f https://raw.githubusercontent.com/dejanu/k8s_logging/refs/heads
 
 # after a couple of minutes check in opensearch your index, i.e.: kubernetes-logs-2025.08.13
 curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/kubernetes-logs-2025.08.13/_search?size=3&sort=@timestamp:desc&pretty"
+
+....
+"kubernetes" : {
+"container_name" : "count",
+"namespace_name" : "default",
+"pod_name" : "counter",
+}
+...
 ```
 
 ## Motivation

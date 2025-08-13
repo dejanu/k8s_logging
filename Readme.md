@@ -6,7 +6,7 @@ LOG AGGREATOR/PROCESSOR --> Fluentd (deployment/sts)
 LOG STORAGE/SEARCH --> OpenSearch (sts)
 ```
 
-[logging chain](./diagrams/logging_chain.png)
+![logging chain](./diagrams/logging_chain.png)
 
 
 ## Motivation

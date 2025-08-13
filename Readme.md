@@ -44,7 +44,7 @@ Fluentbit it uses parsers to make sense of raw log files,filters to enrich logs 
 
 ```bash
 helm upgrade -i fluentbit charts/fluent-bit
-helm upgrade -i fluentd charts/fluentd -f fluentd-values.yaml
+helm upgrade -i fluentd charts/fluentd
 helm upgrade -i opensearch charts/opensearch
 
 # check opensearch cluster

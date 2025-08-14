@@ -2,7 +2,7 @@ nameOverride: ""
 fullnameOverride: ""
 
 # DaemonSet, Deployment or StatefulSet
-kind: "Deployment"
+kind: "StatefulSet"
 # azureblob, cloudwatch, elasticsearch7, elasticsearch8, gcs, graylog , kafka, kafka2, kinesis, opensearch
 variant: opensearch
 # # Only applicable for Deployment or StatefulSet
@@ -192,7 +192,7 @@ volumeMounts: []
 ## Fluentd persistence
 ##
 persistence:
-  enabled: false
+  enabled: true
   storageClass: ""
   accessMode: ReadWriteOnce
   size: 10Gi
@@ -401,14 +401,15 @@ fileConfigs:
         scheme https
         ssl_verify false
         user admin
-        password INSERTPASSORDHERE
+        password INSERTPASSWORD
         index_name fluentd-logs
         type_name _doc
         logstash_format true
         logstash_prefix kubernetes-logs
         <buffer>
           @type file
-          path /var/log/fluent/buffer
+          path /var/fluentd-buffers/buffer
+          compress gzip 
           flush_mode interval
           flush_interval 10s
           chunk_limit_size 8m

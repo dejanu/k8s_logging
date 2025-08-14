@@ -12,6 +12,7 @@ LOG STORAGE/SEARCH --> OpenSearch (sts)
 ## Setup Quick install
 
 ```bash
+# update password in values for opensearch and fluentd
 helm upgrade -i fluentbit charts/fluent-bit
 helm upgrade -i fluentd charts/fluentd
 helm upgrade -i opensearch charts/opensearch
@@ -19,20 +20,20 @@ helm upgrade -i opensearch charts/opensearch
 # check fluentd config at runtime: 01_sources.conf or 04_outputs.conf
 kubectl exec -c fluentd $(kubectl get po -l app.kubernetes.io/instance=fluentd -oname) -- ls /etc/fluent/config.d/
 
+# deploy a workload (counter pod: kubectl logs -f counter)
+kubectl apply -f https://raw.githubusercontent.com/dejanu/k8s_logging/refs/heads/main/counter_pod.yaml
+
 # port forward to opensearch cluster
 kubectl port-forward svc/opensearch-cluster-master 9200:9200
 
 # check cluster health
-curl -k -u `admin:INSERTPASSORDHERE` "https://localhost:9200/_cluster/health?pretty"
+curl -k -u admin:INSERTPASSWORD "https://localhost:9200/_cluster/health?pretty"
 
 # check indices (you should see kubernetes-logs-YYYY-MM-DD)
-curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/_cat/indices?v&pretty"
-
-# deploy a workload (i.e. a counter pod)
-kubectl apply -f https://raw.githubusercontent.com/dejanu/k8s_logging/refs/heads/main/counter_pod.yaml
+curl -k -u admin:INSERTPASSWORD "https://localhost:9200/_cat/indices?v&pretty"
 
 # after a couple of minutes check in opensearch your index, i.e.: kubernetes-logs-2025.08.13
-curl -k -u admin:INSERTPASSORDHERE "https://localhost:9200/kubernetes-logs-2025.08.13/_search?size=3&sort=@timestamp:desc&pretty"
+curl -k -u admin:INSERTPASSWORD "https://localhost:9200/kubernetes-logs-2025.08.13/_search?size=3&sort=@timestamp:desc&pretty"
 
 ....
 "kubernetes" : {

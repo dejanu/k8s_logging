@@ -33,7 +33,7 @@ curl -k -u admin:INSERTPASSWORD "https://localhost:9200/_cluster/health?pretty"
 curl -k -u admin:INSERTPASSWORD "https://localhost:9200/_cat/indices?v&pretty"
 
 # after a couple of minutes check in opensearch your index, i.e.: kubernetes-logs-2025.08.13
-curl -k -u admin:INSERTPASSWORD "https://localhost:9200/kubernetes-logs-2025.08.13/_search?size=3&sort=@timestamp:desc&pretty"
+curl -k -u admin:INSERTPASSWORD "https://localhost:9200/kubernetes-logs-2025.08.14/_search?size=3&sort=@timestamp:desc&pretty"
 
 ....
 "kubernetes" : {
@@ -96,3 +96,4 @@ Solution start session in opensearch-master pod `kubectl exec -it opensearch-clu
 ### OpenSearch sizing
 
 * OpenSearch calculator [here](https://dejanu.github.io/oscalculator.html)
+* Article [here](https://dejanualex.medium.com/kubernetes-distributed-logging-3e890cc02842)

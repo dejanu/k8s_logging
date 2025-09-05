@@ -6,6 +6,8 @@ LOG AGGREATOR/PROCESSOR --> Fluentd (deployment/sts)
 LOG STORAGE/SEARCH --> OpenSearch (sts)
 ```
 
+Acceptance criteria: Logs must be searchable and browsable using OpensearchDashboards
+
 ![logging chain](./diagrams/logging_chain.png)
 
 
@@ -16,6 +18,7 @@ LOG STORAGE/SEARCH --> OpenSearch (sts)
 helm upgrade -i fluentbit charts/fluent-bit
 helm upgrade -i fluentd charts/fluentd
 helm upgrade -i opensearch charts/opensearch
+helm upgrade -i opensearch-dashboards charts/opensearch-dashboards
 
 # check fluentd config at runtime: 01_sources.conf or 04_outputs.conf
 kubectl exec -c fluentd $(kubectl get po -l app.kubernetes.io/instance=fluentd -oname) -- ls /etc/fluent/config.d/
@@ -42,6 +45,9 @@ curl -k -u admin:INSERTPASSWORD "https://localhost:9200/kubernetes-logs-2025.08.
 "pod_name" : "counter",
 }
 ...
+
+# port forward to opensearch-dashboards
+kubectl port-forward svc/opensearch-dashboards 5601:5601
 ```
 
 ## Motivation

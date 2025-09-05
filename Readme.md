@@ -29,14 +29,18 @@ kubectl apply -f https://raw.githubusercontent.com/dejanu/k8s_logging/refs/heads
 # port forward to opensearch cluster
 kubectl port-forward svc/opensearch-cluster-master 9200:9200
 
+# set desired password for admin in opensearch, fluentd and opensearch-dashboards values.yaml files
+# Update all occurrences of INSERTPASSWORD with YOURPASSWORD
+grep -irl "INSERTPASSWORD" charts/ | xargs sed -ie "s/INSERTPASSWORD/YOURPASSWORD/g" 
+
 # check cluster health
-curl -k -u admin:INSERTPASSWORD "https://localhost:9200/_cluster/health?pretty"
+curl -k -u admin:YOURPASSWORD "https://localhost:9200/_cluster/health?pretty"
 
 # check indices (you should see kubernetes-logs-YYYY-MM-DD)
-curl -k -u admin:INSERTPASSWORD "https://localhost:9200/_cat/indices?v&pretty"
+curl -k -u admin:YOURPASSWORD "https://localhost:9200/_cat/indices?v&pretty"
 
 # after a couple of minutes check in opensearch your index, i.e.: kubernetes-logs-2025.08.13
-curl -k -u admin:INSERTPASSWORD "https://localhost:9200/kubernetes-logs-2025.08.14/_search?size=3&sort=@timestamp:desc&pretty"
+curl -k -u admin:YOURPASSWORD "https://localhost:9200/kubernetes-logs-2025.08.14/_search?size=3&sort=@timestamp:desc&pretty"
 
 # deploy a pod to generate some logs
 kubectl apply -f counter_pod.yaml

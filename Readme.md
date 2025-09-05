@@ -14,7 +14,7 @@ Acceptance criteria: Logs must be searchable and browsable using OpensearchDashb
 ## Setup Quick install
 
 ```bash
-# update password in values for opensearch and fluentd
+# update password in values for opensearch, fluentd and opensearch-dashboards
 helm upgrade -i fluentbit charts/fluent-bit
 helm upgrade -i fluentd charts/fluentd
 helm upgrade -i opensearch charts/opensearch
@@ -38,6 +38,8 @@ curl -k -u admin:INSERTPASSWORD "https://localhost:9200/_cat/indices?v&pretty"
 # after a couple of minutes check in opensearch your index, i.e.: kubernetes-logs-2025.08.13
 curl -k -u admin:INSERTPASSWORD "https://localhost:9200/kubernetes-logs-2025.08.14/_search?size=3&sort=@timestamp:desc&pretty"
 
+# deploy a pod to generate some logs
+kubectl apply -f counter_pod.yaml
 ....
 "kubernetes" : {
 "container_name" : "count",
@@ -58,7 +60,8 @@ Both Fluentd and Fluent Bit can work as Aggregators or Forwarders, and can compl
 More [here](https://docs.fluentbit.io/manual/about/fluentd-and-fluent-bit)
 
 * FluentBit: lightweight forwarder (450KB - 1 MB) translating into `memory: 128Mi` and `cpu: 100m` with a variety of input plugins. Uses [tail input plugin](https://docs.fluentbit.io/manual/data-pipeline/inputs/tail) to tail `/var/log/containers/*.log` and forwards to fluentd using [forward output plugin](https://docs.fluentbit.io/manual/data-pipeline/outputs/forward)...stream data to fluentd.
-Fluentbit it uses parsers to make sense of raw log files,filters to enrich logs and outputs
+
+Fluentbit uses parsers to make sense of raw log files, filters to enrich logs and outputs
 
 ```yaml
 [INPUT]
@@ -80,11 +83,14 @@ Fluentbit it uses parsers to make sense of raw log files,filters to enrich logs 
   Index   myapp-logs
 ```
 
-* Fluentd: aggregator (40 MB - 60 MB ) translating into into `memory: 128Mi` and `cpu: 10m`. Does buffering (in-memory or file based), retries, routing, filtering.
+* Fluentd: aggregator (40 MB - 60 MB ) translating into into `memory: 128Mi` and `cpu: 10m`. Does buffering (in-memory or file based), retries, routing, filtering. (also has tail input plugin and forward output plugin + 
+defines the index structure in the OpenSearch output plugin)
 
 * A word about [buffering](https://github.com/dejanu/k8s_logging/blob/main/buffering.md) 
 
 * OpenSearch: storage and search engine
+
+* OpenSearchDashboards: visualization layer
 
 ## Troubleshooting
 
